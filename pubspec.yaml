@@ -1,0 +1,48 @@
+name: music_guess
+description: A Flutter client for the MusicGuess server.
+publish_to: 'none' # private app
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"     # adjust to your Flutter SDK
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.2
+
+  # HTTP & WebSockets
+  http: ^0.13.5
+  web_socket_channel: ^2.4.0
+
+  # Local storage for session tokens, history cache, etc.
+  shared_preferences: ^2.0.15
+
+  # Crypto
+  crypto: ^3.0.2
+
+  # Recording & file access
+  record: ^6.0.0
+  path_provider: ^2.1.5
+
+  url_launcher: ^6.1.7
+  audioplayers: ^6.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/logo.png
+
+  fonts:
+    - family: Honk
+      fonts:
+        - asset: assets/Honk-Regular.ttf
+          weight: 400
