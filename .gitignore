@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Miscellaneous
 *.class
 *.log
@@ -61,3 +62,21 @@ web/
 test/
 *.iml
 .metadata
+=======
+.env
+
+.venv/
+
+__pycache__/
+*.py[cod]
+
+certs/
+
+.cache
+
+.idea/
+.vscode/
+
+*.key
+*.pem
+>>>>>>> 371becbd0f608b05552def623d1b667d8e625dfc
