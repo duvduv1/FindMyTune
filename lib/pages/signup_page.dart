@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme.dart';
 import '../utils/validators.dart';
-import '../utils/hash.dart';
 import '../services/api_service.dart';
 
 class SignupPage extends StatefulWidget {
@@ -40,12 +39,11 @@ class _SignupPageState extends State<SignupPage> {
 
     final uname = _usernameCtrl.text.trim();
     final pwd = _passwordCtrl.text;
-    final hashed = HashUtils.hashPassword(pwd);
 
     Map<String, dynamic> resp;
     try {
       await _apiService.connect();
-      resp = await _apiService.signup(uname, hashed);
+      resp = await _apiService.signup(uname, pwd);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)

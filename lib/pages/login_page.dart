@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/validators.dart';
-import '../utils/hash.dart';
 import '../services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
 
     final uname = _usernameCtrl.text.trim();
     final pwd = _passwordCtrl.text;
-    final hashed = HashUtils.hashPassword(pwd);
 
     bool success = false;
     try {
@@ -48,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       await _apiService.connect();
       // Perform login over WebSocket
       print("trying to log in...");
-      final resp = await _apiService.login(uname, hashed);
+      final resp = await _apiService.login(uname, pwd);
       print("succ");
       success = resp['status'] == 'ok';
     } catch (e) {

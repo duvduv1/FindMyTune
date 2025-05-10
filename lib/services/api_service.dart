@@ -41,12 +41,11 @@ class ApiService {
 
   // -------------------- Authentication -------------------- //
 
-  Future<Map<String, dynamic>> signup(
-      String username, String passwordHash) async {
+  Future<Map<String, dynamic>> signup(String username, String password) async {
     await connect();
     await send({
       'action': 'signup',
-      'data': {'username': username, 'password': passwordHash},
+      'data': {'username': username, 'password': password},
     });
     final resp = await messages.firstWhere((m) => m.containsKey('status'));
     if (resp['status'] == 'ok' && resp.containsKey('token')) {
@@ -58,12 +57,11 @@ class ApiService {
     return resp;
   }
 
-  Future<Map<String, dynamic>> login(
-      String username, String passwordHash) async {
+  Future<Map<String, dynamic>> login(String username, String password) async {
     await connect();
     await send({
       'action': 'login',
-      'data': {'username': username, 'password': passwordHash},
+      'data': {'username': username, 'password': password},
     });
     final resp = await messages.firstWhere((m) => m.containsKey('status'));
     if (resp['status'] == 'ok' && resp.containsKey('token')) {
