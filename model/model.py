@@ -231,7 +231,7 @@ def pretrain_model(song_db: SongDatabase):
     pretrain_contrastive(model, dataset, model_path="contrastive_pretrained_model")
 
 
-def create_model(song_db: SongDatabase, model_path: str, pretrained: bool = False):
+def create_model(song_db: SongDatabase, model_path: str, pretrained: bool = True):
     print("Preparing classification dataset...")
     dataset = SongSpectrogramDataset(song_db)
     model = SongCNN()

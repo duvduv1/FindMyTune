@@ -5,6 +5,7 @@ import asyncio
 import json
 import base64
 from typing import Dict
+import re
 
 import websockets
 from websockets.legacy.server import WebSocketServerProtocol
@@ -26,6 +27,11 @@ from game.game_hub             import GameHub
 from security.crypto_utils     import verify_password, hash_password
 from history_utils             import get_user_history_payload
 
+MAX_WS_MSG_SIZE  = 1_000_000 # 1MB
+USERNAME_REGEX   = re.compile(r'^[A-Za-z0-9]{3,12}$')
+PASSWORD_REGEX   = re.compile(r'(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,12}')
+
+#r'(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,12}'
 # Shared state:
 sessions     = SessionManager()
 brute_force  = BruteForceProtector(MAX_FAILED_LOGIN, BRUTE_FORCE_WINDOW)
@@ -82,8 +88,10 @@ async def handler(ws):
                 continue
 
             # 3) Re‑hash the client hash and store
-            hashed_pwd = hash_password(pwd)
-            created = USERS_DB.add_user(uname, hashed_pwd)
+            created = False
+            if USERNAME_REGEX.fullmatch(uname) and PASSWORD_REGEX.fullmatch(pwd):
+                hashed_pwd = hash_password(pwd)
+                created = USERS_DB.add_user(uname, hashed_pwd)
             if not created:
                 await ws.send(json.dumps({
                     "status": "error", "reason": "couldn't_create_user"
@@ -109,6 +117,11 @@ async def handler(ws):
             uname_in = data.get("username", "").strip()
             pwd_in = data.get("password", "")
             row = USERS_DB.get_user_by_username(uname_in)
+            if not USERNAME_REGEX.fullmatch(uname_in) and PASSWORD_REGEX.fullmatch(pwd_in):
+                await ws.send(json.dumps({
+                    "status": "error", "reason": "invalid_credentials"
+                }))
+                continue
             if row and verify_password(pwd_in, row[2]):
                 uname = row[1]
                 token = sessions.create_session(uname)
@@ -329,7 +342,8 @@ async def main():
         host='0.0.0.0',
         port=SERVER_PORT,
         ssl=ssl_ctx,
-        ping_interval=None
+        ping_interval=None,
+        max_size=MAX_WS_MSG_SIZE
     )
     print(f"WebSocket server listening on {SERVER_HOST}:{SERVER_PORT}...")
 
