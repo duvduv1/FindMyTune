@@ -68,7 +68,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
                   final val = v?.trim() ?? '';
                   if (val.isEmpty) return 'Enter a game ID';
                   if (val.length != 8) return 'Game ID must be 8 characters';
-                  if (!RegExp(r'^[A-Za-z0-9]{8}\$').hasMatch(val)) {
+                  if (!RegExp(r'^[A-Za-z0-9]{8}').hasMatch(val)) {
                     return 'Only letters and numbers allowed';
                   }
                   return null;
